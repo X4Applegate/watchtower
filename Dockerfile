@@ -22,7 +22,7 @@ RUN apk add --no-cache \
                 ARG VERSION=dev
                 RUN GOFLAGS="-mod=mod" CGO_ENABLED=0 GOOS=linux go build \
                     -a \
-                        -ldflags "-extldflags '-static' -X github.com/containrrr/watchtower/internal/meta.Version=${VERSION}" \
+                        -ldflags "-extldflags '-static' -X github.com/X4Applegate/watchtower/internal/meta.Version=${VERSION}" \
                             -o /watchtower \
                                 .
 

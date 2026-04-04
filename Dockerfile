@@ -11,9 +11,12 @@ RUN apk add --no-cache \
 
                 WORKDIR /src
 
-                # Cache dependencies first (faster rebuilds)
+                # Cache dependency downloads (faster rebuilds when only code changes)
                 COPY go.mod go.sum ./
                 RUN go mod download
+
+                # Regenerate go.sum to account for any dependency updates
+                RUN go mod tidy
 
                 # Copy full source and build
                 COPY . .
@@ -26,14 +29,17 @@ RUN apk add --no-cache \
                                 .
 
                                 #
-                                # Stage 2: Minimal runtime image
+                                # Stage 2: Pull certs and timezone data from alpine
                                 #
-                                FROM --platform=$TARGETPLATFORM alpine:3.19.0 AS alpine
+                                FROM alpine:3.19.0 AS alpine
 
                                 RUN apk add --no-cache \
                                     ca-certificates \
                                         tzdata
 
+                                        #
+                                        # Stage 3: Minimal scratch runtime image
+                                        #
                                         FROM scratch
 
                                         LABEL "com.centurylinklabs.watchtower"="true"

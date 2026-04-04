@@ -11,18 +11,16 @@ RUN apk add --no-cache \
 
                 WORKDIR /src
 
-                # Cache dependency downloads (faster rebuilds when only code changes)
+                # Copy module files and download declared dependencies
                 COPY go.mod go.sum ./
                 RUN go mod download
 
-                # Regenerate go.sum to account for any dependency updates
-                RUN go mod tidy
-
-                # Copy full source and build
+                # Copy full source
                 COPY . .
 
+                # Build with -mod=mod so Go resolves any missing go.sum entries automatically
                 ARG VERSION=dev
-                RUN CGO_ENABLED=0 GOOS=linux go build \
+                RUN GOFLAGS="-mod=mod" CGO_ENABLED=0 GOOS=linux go build \
                     -a \
                         -ldflags "-extldflags '-static' -X github.com/containrrr/watchtower/internal/meta.Version=${VERSION}" \
                             -o /watchtower \

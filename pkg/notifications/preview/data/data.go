@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/containrrr/watchtower/pkg/types"
+	"github.com/X4Applegate/watchtower/pkg/types"
 )
 
 type previewData struct {

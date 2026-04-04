@@ -4,8 +4,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/containrrr/watchtower/internal/actions/mocks"
-	"github.com/containrrr/watchtower/pkg/registry/manifest"
+	"github.com/X4Applegate/watchtower/internal/actions/mocks"
+	"github.com/X4Applegate/watchtower/pkg/registry/manifest"
 	apiTypes "github.com/docker/docker/api/types"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"

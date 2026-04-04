@@ -2,9 +2,9 @@ package digest_test
 
 import (
 	"fmt"
-	"github.com/containrrr/watchtower/internal/actions/mocks"
-	"github.com/containrrr/watchtower/pkg/registry/digest"
-	wtTypes "github.com/containrrr/watchtower/pkg/types"
+	"github.com/X4Applegate/watchtower/internal/actions/mocks"
+	"github.com/X4Applegate/watchtower/pkg/registry/digest"
+	wtTypes "github.com/X4Applegate/watchtower/pkg/types"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/ghttp"

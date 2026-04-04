@@ -1,4 +1,7 @@
-<div align="center">
+> **🍴 Fork Notice:** This is a maintained fork of [containrrr/watchtower](https://github.com/containrrr/watchtower) by [@X4Applegate](https://github.com/X4Applegate).
+> > The upstream project is no longer maintained. This fork applies bug fixes and dependency updates. See [CHANGELOG.md](./CHANGELOG.md) for details.
+> >
+> > <div align="center">
 
   ### ⚠️ This project is no longer maintained
   See https://github.com/containrrr/watchtower/discussions/2135 for details.

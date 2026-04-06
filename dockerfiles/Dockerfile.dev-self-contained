@@ -2,13 +2,10 @@
 # Builder
 #
 
-FROM golang:alpine as builder
+FROM golang:1.22-alpine AS builder
 
-# use version (for example "v0.3.3") or "main"
-ARG WATCHTOWER_VERSION=main
-
-# Pre download required modules to avoid redownloading at each build thanks to docker layer caching.
-# Copying go.mod and go.sum ensure to invalid the layer/build cache if there is a change in module requirement
+# Pre-download required modules to avoid redownloading at each build (docker layer caching).
+# Copying go.mod and go.sum ensures the cache is invalidated when module requirements change.
 WORKDIR /watchtower
 COPY go.mod .
 COPY go.sum .
@@ -22,11 +19,10 @@ RUN apk add --no-cache \
 
 COPY . /watchtower
 
-RUN \
-  cd /watchtower && \
-  \
-  GO111MODULE=on CGO_ENABLED=0 GOOS=linux go build -a -ldflags "-extldflags '-static' -X github.com/containrrr/watchtower/internal/meta.Version=$(git describe --tags)" . && \
-  GO111MODULE=on go test ./... -v
+RUN cd /watchtower && \
+    CGO_ENABLED=0 GOOS=linux go build -a \
+        -ldflags "-extldflags '-static' -X github.com/X4Applegate/watchtower/internal/meta.Version=$(git describe --tags 2>/dev/null || echo dev)" . && \
+    go test ./... -v
 
 
 #

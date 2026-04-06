@@ -33,7 +33,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 - **`docker-compose.yml`** — simplified to use published Docker Hub image (`applegater/watchtower:v1.0.1`), loads config via `env_file: .env`, no ports exposed (Watchtower is a fully internal updater with no web GUI).
 
-- **`example.env`** — added as a reference configuration template. Removed HTTP API variables (`WATCHTOWER_HTTP_API_METRICS`, `WATCHTOWER_HTTP_API_UPDATE`, `WATCHTOWER_HTTP_API_TOKEN`) since no ports are exposed. Focused on core update behaviour: `POLL_INTERVAL`, `CLEANUP`, `LOG_LEVEL`, notifications, and label/run-once flags.
+- **`example.env`** — added as a reference configuration template. Removed HTTP API variables (`WATCHTOWER_HTTP_API_METRICS`, `WATCHTOWER_HTTP_API_UPDATE`, `WATCHTOWER_HTTP_API_TOKEN`) since no ports are exposed. Focused on core update behaviour: `POLL_INTERVAL`, `CLEANUP`, `LOG_LEVEL`, notifications, and label/run-once flags. Added `TZ=America/Los_Angeles` for correct log timestamp timezone.
 
 ### Dependencies Updated
 

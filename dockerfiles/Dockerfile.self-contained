@@ -2,9 +2,9 @@
 # Builder
 #
 
-FROM golang:alpine as builder
+FROM golang:1.22-alpine AS builder
 
-# use version (for example "v0.3.3") or "main"
+# use version tag (for example "v0.3.3") or "main"
 ARG WATCHTOWER_VERSION=main
 
 RUN apk add --no-cache \
@@ -13,13 +13,12 @@ RUN apk add --no-cache \
     git \
     tzdata
 
-RUN git clone --branch "${WATCHTOWER_VERSION}" https://github.com/containrrr/watchtower.git
+RUN git clone --branch "${WATCHTOWER_VERSION}" https://github.com/X4Applegate/watchtower.git
 
-RUN \
-  cd watchtower && \
-  \
-  GO111MODULE=on CGO_ENABLED=0 GOOS=linux go build -a -ldflags "-extldflags '-static' -X github.com/containrrr/watchtower/internal/meta.Version=$(git describe --tags)" . && \
-  GO111MODULE=on go test ./... -v
+RUN cd watchtower && \
+    CGO_ENABLED=0 GOOS=linux go build -a \
+        -ldflags "-extldflags '-static' -X github.com/X4Applegate/watchtower/internal/meta.Version=$(git describe --tags 2>/dev/null || echo dev)" . && \
+    go test ./... -v
 
 
 #

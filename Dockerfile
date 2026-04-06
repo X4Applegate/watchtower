@@ -5,54 +5,54 @@ FROM --platform=$BUILDPLATFORM golang:1.22-alpine AS builder
 
 RUN apk add --no-cache \
     alpine-sdk \
-        ca-certificates \
-            git \
-                tzdata
+    ca-certificates \
+    git \
+    tzdata
 
-                WORKDIR /src
+WORKDIR /src
 
-                # Copy module files and download declared dependencies
-                COPY go.mod go.sum ./
-                RUN go mod download
+# Copy module files and download declared dependencies
+COPY go.mod go.sum ./
+RUN go mod download
 
-                # Copy full source
-                COPY . .
+# Copy full source
+COPY . .
 
-                # Build with -mod=mod so Go resolves any missing go.sum entries automatically
-                ARG VERSION=dev
-                RUN GOFLAGS="-mod=mod" CGO_ENABLED=0 GOOS=linux go build \
-                    -a \
-                        -ldflags "-extldflags '-static' -X github.com/X4Applegate/watchtower/internal/meta.Version=${VERSION}" \
-                            -o /watchtower \
-                                .
+# Build with -mod=mod so Go resolves any missing go.sum entries automatically
+ARG VERSION=dev
+RUN GOFLAGS="-mod=mod" CGO_ENABLED=0 GOOS=linux go build \
+    -a \
+    -ldflags "-extldflags '-static' -X github.com/X4Applegate/watchtower/internal/meta.Version=${VERSION}" \
+    -o /watchtower \
+    .
 
-                                #
-                                # Stage 2: Pull certs and timezone data from alpine
-                                #
-                                FROM alpine:3.19.0 AS alpine
+#
+# Stage 2: Pull certs and timezone data from alpine
+#
+FROM alpine:3.21 AS alpine
 
-                                RUN apk add --no-cache \
-                                    ca-certificates \
-                                        tzdata
+RUN apk add --no-cache \
+    ca-certificates \
+    tzdata
 
-                                        #
-                                        # Stage 3: Minimal scratch runtime image
-                                        #
-                                        FROM scratch
+#
+# Stage 3: Minimal scratch runtime image
+#
+FROM scratch
 
-                                        LABEL "com.centurylinklabs.watchtower"="true"
+LABEL "com.centurylinklabs.watchtower"="true"
 
-                                        COPY --from=alpine \
-                                            /etc/ssl/certs/ca-certificates.crt \
-                                                /etc/ssl/certs/ca-certificates.crt
-                                                COPY --from=alpine \
-                                                    /usr/share/zoneinfo \
-                                                        /usr/share/zoneinfo
+COPY --from=alpine \
+    /etc/ssl/certs/ca-certificates.crt \
+    /etc/ssl/certs/ca-certificates.crt
+COPY --from=alpine \
+    /usr/share/zoneinfo \
+    /usr/share/zoneinfo
 
-                                                        COPY --from=builder /watchtower /watchtower
+COPY --from=builder /watchtower /watchtower
 
-                                                        EXPOSE 8080
+EXPOSE 8080
 
-                                                        HEALTHCHECK CMD [ "/watchtower", "--health-check"]
+HEALTHCHECK CMD [ "/watchtower", "--health-check"]
 
-                                                        ENTRYPOINT ["/watchtower"]
+ENTRYPOINT ["/watchtower"]

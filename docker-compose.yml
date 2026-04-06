@@ -2,12 +2,12 @@ version: '3.8'
 
 services:
   watchtower:
-      container_name: watchtower
-          image: ghcr.io/x4applegate/watchtower:latest
-              restart: unless-stopped
-                  volumes:
-                        - /var/run/docker.sock:/var/run/docker.sock:ro
-                            env_file:
-                                  - .env
-                                      ports:
-                                            - 8080:8080
+    container_name: watchtower
+    image: ghcr.io/x4applegate/watchtower:latest
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    env_file:
+      - .env
+    ports:
+      - 8080:8080
